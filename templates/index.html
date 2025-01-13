@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Style Interface</title>
+    <style>
+        /* TikTok'un renk paleti */
+        :root {
+            --primary-color: #69C9D0;  /* TikTok Mavi */
+            --secondary-color: #EE1D52; /* TikTok Kırmızı */
+            --background-color: #121212; /* TikTok arka plan rengi */
+            --text-color: white;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tiktok-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: -1;
+        }
+
+        /* TikTok'un arka planında hareketli bir animasyon */
+        .background-animation {
+            position: absolute;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            animation: gradientMove 5s linear infinite;
+        }
+    
+
+        .content {
+            z-index: 1;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 15px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tiktok-container">
+        <div class="background-animation"></div>
+    </div>
+
+    <div class="content">
+        <div class="title">TikTok Video Downloader</div>
+        <button class="button" onclick="alert('Enter TikTok URL')">Download Video</button>
+    </div>
+
+</body>
+</html>
