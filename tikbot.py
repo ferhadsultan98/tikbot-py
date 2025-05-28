@@ -21,6 +21,7 @@ def download():
     ydl_opts = {
         'format': 'best[ext=mp4][height<=360]' if format_type == 'mp4' else 'bestaudio[ext=m4a]/bestaudio',
         'outtmpl': filename,
+        'cookiefile': 'cookies.txt',  # ✅ cookie faylını tanıtdıq
         'quiet': True
     }
 
