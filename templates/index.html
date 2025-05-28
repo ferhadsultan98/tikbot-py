@@ -1,90 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Style Interface</title>
-    <style>
-        /* TikTok'un renk paleti */
-        :root {
-            --primary-color: #69C9D0;  /* TikTok Mavi */
-            --secondary-color: #EE1D52; /* TikTok Kırmızı */
-            --background-color: #121212; /* TikTok arka plan rengi */
-            --text-color: white;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .tiktok-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: -1;
-        }
-
-        /* TikTok'un arka planında hareketli bir animasyon */
-        .background-animation {
-            position: absolute;
-            width: 300%;
-            height: 300%;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            animation: gradientMove 5s linear infinite;
-        }
-    
-
-        .content {
-            z-index: 1;
-            text-align: center;
-        }
-
-        .title {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            padding: 15px 30px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: var(--secondary-color);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>YouTube Downloader</title>
+  <style>
+    body { font-family: sans-serif; background: #0F1727; color: white; text-align: center; padding: 50px; }
+    input, select, button { padding: 10px; margin: 10px; font-size: 16px; }
+    button { background: #B72D44; color: white; border: none; cursor: pointer; }
+  </style>
 </head>
 <body>
+  <h1>YouTube Downloader</h1>
+  <form id="download-form">
+    <input type="text" name="url" placeholder="Enter YouTube URL" required><br>
+    <select name="format">
+      <option value="mp4">MP4 (Video + Audio)</option>
+      <option value="mp3">MP3 (Audio Only)</option>
+    </select><br>
+    <button type="submit">Download</button>
+  </form>
+  <div id="status"></div>
 
-    <div class="tiktok-container">
-        <div class="background-animation"></div>
-    </div>
+  <script>
+    const form = document.getElementById('download-form');
+    const status = document.getElementById('status');
 
-    <div class="content">
-        <div class="title">TikTok Video Downloader</div>
-        <button class="button" onclick="alert('Enter TikTok URL')">Download Video</button>
-    </div>
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.innerText = "Downloading...";
 
+      const formData = new FormData(form);
+      const response = await fetch('/download', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = formData.get('format') === 'mp3' ? 'audio.m4a' : 'video.mp4';
+        a.click();
+        status.innerText = "Download completed.";
+      } else {
+        status.innerText = "Download failed.";
+      }
+    });
+  </script>
 </body>
 </html>
