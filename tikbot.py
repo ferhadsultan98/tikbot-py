@@ -13,34 +13,30 @@ def index():
 
 @app.route('/download', methods=['POST'])
 def download():
-    video_url = request.form['url']
-    format_type = request.form['format']
-    ext = 'mp4' if format_type == 'mp4' else 'm4a'
+    url = request.form['url']
+    fmt = request.form['format']  # 'mp3' or 'mp4'
+    ext = 'm4a' if fmt == 'mp3' else 'mp4'
     filename = f"{uuid.uuid4()}.{ext}"
 
     ydl_opts = {
+        'format': 'bestaudio[ext=m4a]' if fmt == 'mp3' else 'best[ext=mp4]',
         'outtmpl': filename,
         'quiet': True,
-        'noplaylist': True,
-        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]' if format_type == 'mp4' else 'bestaudio[ext=m4a]/bestaudio',
-        'merge_output_format': None,
         'cookiefile': 'cookies.txt'
     }
 
-    def delayed_remove(path):
-        time.sleep(30)
-        if os.path.exists(path):
-            os.remove(path)
+    def remove_later(f):
+        time.sleep(60)
+        if os.path.exists(f):
+            os.remove(f)
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(video_url, download=True)
-            if not os.path.exists(filename):
-                return "Fayl tapılmadı – ola bilər ki, format dəstəklənmir."
+            ydl.download([url])
     except Exception as e:
-        return f"Yükləmə zamanı xəta baş verdi: {str(e)}"
+        return f"Hata oluştu: {e}"
 
-    threading.Thread(target=delayed_remove, args=(filename,)).start()
+    threading.Thread(target=remove_later, args=(filename,)).start()
     return send_file(filename, as_attachment=True)
 
 if __name__ == '__main__':
